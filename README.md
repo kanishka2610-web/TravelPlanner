@@ -6,7 +6,7 @@ A small travel planning app. Create trips, keep an itinerary of activities for e
 
 ## Features
 
-- Create, view, edit and delete trips
+- Create, view, edit and delete trips (with custom timezone support)
 - Add, edit and delete activities for a trip
 - Itinerary grouped by date
 - Search trips by name or destination
@@ -119,6 +119,7 @@ Example trip:
   "start_date": "2026-11-10",
   "end_date": "2026-11-14",
   "budget": 20000,
+  "timezone": "Asia/Kolkata",
   "description": "Weekend trip with friends"
 }
 ```

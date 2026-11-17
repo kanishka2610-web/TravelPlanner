@@ -35,6 +35,28 @@ describe("TripForm", () => {
       end_date: "2026-11-14",
       budget: 20000,
       description: "",
+      timezone: "UTC",
+    });
+  });
+
+  it("submits a custom timezone when entered", async () => {
+    const onSubmit = vi.fn().mockResolvedValue();
+    renderForm(onSubmit);
+
+    await fillForm();
+    const tzInput = screen.getByLabelText("Timezone");
+    await userEvent.clear(tzInput);
+    await userEvent.type(tzInput, "America/New_York");
+    await userEvent.click(screen.getByRole("button", { name: "Create trip" }));
+
+    expect(onSubmit).toHaveBeenCalledWith({
+      name: "Goa Trip",
+      destination: "Goa",
+      start_date: "2026-11-10",
+      end_date: "2026-11-14",
+      budget: 20000,
+      description: "",
+      timezone: "America/New_York",
     });
   });
 
