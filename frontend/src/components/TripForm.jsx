@@ -7,13 +7,14 @@ const emptyTrip = {
   start_date: "",
   end_date: "",
   budget: "",
+  timezone: "UTC",
   description: "",
 };
 
 const inputClass = "mt-1 w-full rounded border border-gray-300 bg-white px-3 py-2";
 
 export default function TripForm({ initialTrip = emptyTrip, submitLabel, onSubmit, cancelTo }) {
-  const [trip, setTrip] = useState(initialTrip);
+  const [trip, setTrip] = useState({ ...emptyTrip, ...initialTrip });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -79,17 +80,29 @@ export default function TripForm({ initialTrip = emptyTrip, submitLabel, onSubmi
         </label>
       </div>
 
-      <label className="block text-sm font-medium">
-        Budget (₹)
-        <input
-          type="number"
-          name="budget"
-          value={trip.budget}
-          onChange={handleChange}
-          min="0"
-          className={inputClass}
-        />
-      </label>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <label className="block text-sm font-medium">
+          Budget (₹)
+          <input
+            type="number"
+            name="budget"
+            value={trip.budget}
+            onChange={handleChange}
+            min="0"
+            className={inputClass}
+          />
+        </label>
+        <label className="block text-sm font-medium">
+          Timezone
+          <input
+            name="timezone"
+            value={trip.timezone}
+            onChange={handleChange}
+            placeholder="e.g. America/New_York"
+            className={inputClass}
+          />
+        </label>
+      </div>
 
       <label className="block text-sm font-medium">
         Description

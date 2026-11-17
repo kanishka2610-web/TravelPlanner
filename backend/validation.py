@@ -1,5 +1,6 @@
 import math
 from datetime import datetime
+from zoneinfo import ZoneInfo, available_timezones
 
 # Each validate_* function returns (cleaned_values, error_message).
 # Exactly one of the two is None.
@@ -7,6 +8,20 @@ from datetime import datetime
 
 MAX_ID = 2**63 - 1  # largest integer SQLite can store
 MAX_BUDGET = 10**12
+DEFAULT_TIMEZONE = "UTC"
+
+
+def is_valid_timezone(tz_name):
+    if not isinstance(tz_name, str) or not tz_name.strip():
+        return False
+    tz = tz_name.strip()
+    try:
+        if tz in available_timezones():
+            return True
+        ZoneInfo(tz)
+        return True
+    except Exception:
+        return False
 
 
 def parse_id(value):
@@ -67,12 +82,25 @@ def validate_trip(data):
     if budget > MAX_BUDGET:
         return None, "Budget is too large"
 
+    timezone = data.get("timezone")
+    if timezone in (None, ""):
+        timezone = DEFAULT_TIMEZONE
+    elif not isinstance(timezone, str):
+        return None, "Timezone must be a valid timezone"
+    else:
+        timezone = timezone.strip()
+        if not timezone:
+            timezone = DEFAULT_TIMEZONE
+        elif not is_valid_timezone(timezone):
+            return None, "Timezone must be a valid timezone"
+
     trip = {
         "name": name,
         "destination": destination,
         "start_date": start_date.isoformat(),
         "end_date": end_date.isoformat(),
         "budget": budget,
+        "timezone": timezone,
         "description": clean_text(data, "description"),
     }
     return trip, None
